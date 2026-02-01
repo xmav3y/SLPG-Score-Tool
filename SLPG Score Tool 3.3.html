@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SLPG Score Inpute Tool</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #e0e0e0;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #111;
+    }
+    h1, h2 {
+        font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #222;
+    }
+
+.pc-card {
+    position: relative;
+}
+
+.pc-circle-btn {
+    position: absolute;
+    top: 0px;
+    right: 8px;
+
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+
+    background: #FF9B49 !important;
+    color: #FFF;
+    border: none;
+
+    font-size: 13px;
+    font-weight: regular;
+    line-height: 22px;
+
+    cursor: pointer;
+    padding: 0;
+}
+
+.pc-circle-btn:hover {
+    background: #E6883F !important;
+}
+
+.checklist-popup {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 9999;
+    min-width: 200px;
+    max-width: 250px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.trainee-circle-btn {
+    position: absolute;
+    top: 0px;
+    right: 8px;
+
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+
+    background: #AFE6FF !important;
+    color: #FFF;
+    border: none;
+
+    font-size: 13px;
+    font-weight: regular;
+    line-height: 22px;
+
+    cursor: pointer;
+    padding: 0;
+}
+
+.trainee-circle-btn:hover {
+    background: #86D1F4 !important;
+}
+
+
+    .card-row {
+        display: flex;
+        gap: 15px;
+        width: 100%;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+    #traineeNameCardRow { justify-content: center; }
+    .card {
+        background: #f5f5f5;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 15px;
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+        color: #111;
+    }
+    .card label { font-weight: 500; text-align: center; }
+    .card input[type="text"], .card select {
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        text-align: center;
+        outline: none;
+        transition: border-color 0.2s;
+        font-family: Calibri, sans-serif;
+        background: #f0f0f0;
+        color: #111;
+    }
+    .card input[type="text"]:focus, .card select:focus { border-color: #888; }
+    .card textarea {
+        padding: 6px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        resize: none;
+        min-height: 120px;
+        font-family: Calibri, sans-serif;
+        text-align: left;
+        background: #f0f0f0;
+        color: #111;
+    }
+    #traineeNameCard { flex: 0 0 33.33%; max-width: 33.33%; }
+    #traineeNameCard select { width: 90%; margin: 0 auto; }
+    .summary-card {
+        background: #f5f5f5;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 20px;
+        margin: 20px 0;
+        width: 100%;
+        max-width: 1200px;
+        text-align: left;
+        font-family: Calibri, sans-serif;
+    }
+    #avg {
+        font-weight: bold;
+        font-size: 20px;
+        text-align: center;
+        width: 100px;
+        margin: 10px auto;
+        font-family: Calibri, sans-serif;
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+    #finalScore {
+        font-weight: bold;
+        font-size: 22px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: #f0f0f0;
+        display: inline-block;
+        margin-top: 8px;
+        transition: background 0.2s, border 0.2s;
+        min-width: 60px;
+        text-align: center;
+        border: 1px solid #ccc;
+    }
+    #finalScore.highlight { border: 2px solid #a00; background: #f8dede; }
+    #outputDisplay {
+        background: #f0f0f0;
+        border-radius: 10px;
+        padding: 15px;
+        font-family: Calibri, monospace;
+        white-space: pre-wrap;
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 10px;
+        text-align: left;
+        color: #111;
+    }
+    button {
+        background: #888;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background 0.2s;
+        margin-right: 10px;
+    }
+    button:hover { background: #555; }
+    @media(max-width: 900px){
+        .card-row { flex-direction: column; }
+        #traineeNameCard { flex: 1 1 100%; max-width: 100%; }
+    }
+    /* Popup styles */
+    #popupOverlay {
+        position: fixed;
+        top:0; left:0; right:0; bottom:0;
+        background: rgba(0,0,0,0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    #popupBox {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+    }
+    #popupBox textarea {
+        width: 100%;
+        height: 120px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        resize: none;
+        box-sizing: border-box;
+    }
+    /* Excel Table Card */
+    #excelTableCard table { border-collapse: collapse; width: 100%; background: #fff; }
+    #excelTableCard th, #excelTableCard td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; white-space: pre-wrap; }
+    #excelTableCard th { background: #eee; }
+
+#fullExcelTableCard table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #fff;
+}
+
+#fullExcelTableCard th,
+#fullExcelTableCard td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: left;
+    vertical-align: top;
+    white-space: pre-wrap;
+}
+
+#fullExcelTableCard th {
+    background: #eee;
+}
+
+
+.button-row {
+    display: flex;      /* Put buttons side by side */
+    gap: 10px;          /* Space between buttons */
+    margin-top: 15px;   /* Space above buttons */
+}
+
+.button-row button {
+    flex: 1;            /* Make buttons same width (optional) */
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+
+/* Trainee name cell stays normal */
+.tn-cell {
+    white-space: nowrap;
+}
+
+/* Inner wrapper handles alignment */
+.tn-cell-inner {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Normalize the circle button inside tables */
+.tn-cell-inner .trainee-circle-btn {
+    position: static;
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    flex-shrink: 0;
+}
+
+
+/* ------------------------
+   Excel Table Vertical Alignment
+   ------------------------ */
+#fullExcelTable td,
+#fullExcelTable th {
+    vertical-align: middle;  /* center content vertically */
+}
+
+/* Trainee name cell: center the button + name */
+.tn-cell-inner {
+    display: flex;
+    align-items: center;      /* vertically center button + text */
+    gap: 6px;                 /* optional spacing between button and name */
+}
+
+/* Optional: make multi-line notes cells wrap nicely */
+#fullExcelTable td {
+    white-space: pre-wrap;    /* preserve line breaks in notes */
+}
+
+
+/* FIX: Align trainee blue circle with name in Excel table */
+#fullExcelTable td.tn-cell {
+    vertical-align: middle;
+}
+
+#fullExcelTable .tn-cell-inner {
+    display: flex;
+    align-items: center;   /* vertical centering */
+}
+
+#fullExcelTable .trainee-circle-btn {
+    margin-top: 0;
+    line-height: 22px;
+}
+
+
+
+
+
+</style>
+</head>
+<body>
+
+<!-- Checklist Popup (reused for all buttons) -->
+<div id="checklistPopup" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:10px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); z-index:10000;">
+    <div id="checklistItems"></div>
+</div>
+
+
+
+
+<h1>SLPG Score Input</h1>
+
+<div class="card-row" id="traineeNameCardRow">
+    <div class="card" id="traineeNameCard">
+        <label for="traineeName">Trainee Name</label>
+        <select id="traineeName"><option value="">Select Name</option></select>
+    </div>
+</div>
+
+
+
+<div class="card-row">
+
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open PC Grid Comments"></button>
+        <label for="pc">PC</label>
+        <input type="text" id="pc" class="numInput" placeholder="0">
+        <textarea id="pc_text" placeholder="Notes"></textarea>
+    </div>
+
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open GA Grid Comments"></button>
+        <label for="ga">GA</label>
+        <input type="text" id="ga" class="numInput" placeholder="0">
+        <textarea id="ga_text" placeholder="Notes"></textarea>
+    </div>
+
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open LR Grid Comments"></button>
+        <label for="lr">LR</label>
+        <input type="text" id="lr" class="numInput" placeholder="0">
+        <textarea id="lr_text" placeholder="Notes"></textarea>
+    </div>
+
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open FL Grid Comments"></button>
+        <label for="fl">FL</label>
+        <input type="text" id="fl" class="numInput" placeholder="0">
+        <textarea id="fl_text" placeholder="Notes"></textarea>
+    </div>
+
+    <div class="card pc-card">
+        <button class="pc-circle-btn" title="Open CR Grid Comments"></button>
+        <label for="cr">CR</label>
+        <input type="text" id="cr" class="numInput" placeholder="0">
+        <textarea id="cr_text" placeholder="Notes"></textarea>
+    </div>
+
+</div>
+
+
+<!-- New Excel Table Card -->
+<div class="card summary-card" id="excelTableCard">
+    <h2>Live Excel Row Preview</h2>
+    <table id="excelTable">
+        <thead>
+            <tr>
+                <th>Trainee Name</th>
+                <th>PC</th><th>PC Notes</th>
+                <th>GA</th><th>GA Notes</th>
+                <th>LR</th><th>LR Notes</th>
+                <th>FL</th><th>FL Notes</th>
+                <th>CR</th><th>CR Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="excelRow">
+                <td id="tbl_traineeName"></td>
+                <td id="tbl_pc"></td><td id="tbl_pc_notes"></td>
+                <td id="tbl_ga"></td><td id="tbl_ga_notes"></td>
+                <td id="tbl_lr"></td><td id="tbl_lr_notes"></td>
+                <td id="tbl_fl"></td><td id="tbl_fl_notes"></td>
+                <td id="tbl_cr"></td><td id="tbl_cr_notes"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="button-row">
+        <button id="copyExcelRowBtn">Copy as Excel Row</button>
+        <button id="addEntryBtn">Save Entry</button>
+    </div>
+</div>
+
+
+<div class="summary-card">
+    <h2>Raw LPG & SLPG Score</h2>
+    <div>Average: <input type="text" id="avg" readonly placeholder="—"></div>
+    <div>Final Score: <span id="finalScore">0</span></div>
+    <div id="outputDisplay"></div>
+
+    <button id="copyBtn">Copy Entry</button>
+    <button id="viewAllBtn">View All Entries</button>
+    <button id="downloadAllBtn">Download All Entries (.txt)</button>
+    <button id="exportExcelBtn">Export to Excel</button>
+</div>
+
+
+<!-- Full Multi-Trainee Excel Table -->
+<div class="card summary-card" id="fullExcelTableCard">
+    <h2>All Trainees – Excel Table Preview</h2>
+
+    <table id="fullExcelTable">
+        <thead>
+            <tr>
+                <th>Trainee Name</th>
+                <th>PC</th><th>PC Notes</th>
+                <th>GA</th><th>GA Notes</th>
+                <th>LR</th><th>LR Notes</th>
+                <th>FL</th><th>FL Notes</th>
+                <th>CR</th><th>CR Notes</th>
+                <th>Final Score</th>
+            </tr>
+        </thead>
+        <tbody id="fullExcelBody">
+            <!-- Rows will be generated dynamically -->
+        </tbody>
+    </table>
+
+    <button id="copyAllExcelRowsBtn">Copy All as Excel Table</button>
+</div>
+
+
+<!-- Popup for names -->
+<div id="popupOverlay" style="display: flex;">
+    <div id="popupBox">
+        <h2>Enter Trainee Names (one per line)</h2>
+        <textarea id="nameInput" placeholder="Enter names here..."></textarea>
+        <br><br>
+        <button id="saveNamesBtn">Save Names</button>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+// ------------------- Trainee Name Popup -------------------
+const popupOverlay = document.getElementById("popupOverlay");
+if(document.getElementById("traineeName").options.length <= 1){
+    popupOverlay.style.display = "flex";
+} else {
+    popupOverlay.style.display = "none";
+}
+
+document.getElementById("saveNamesBtn").addEventListener("click", () => {
+    const namesText = document.getElementById("nameInput").value;
+    if (!namesText.trim()) { alert("Please enter at least one name."); return; }
+    const names = namesText.split("\n").map(n=>n.trim()).filter(n=>n!=="");
+    const select = document.getElementById("traineeName");
+    select.innerHTML = '<option value="">Select Name</option>';
+    names.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name; opt.textContent = name;
+        select.appendChild(opt);
+    });
+    popupOverlay.style.display = "none";
+});
+
+// ------------------- Scoring Logic -------------------
+function getFinalScore(avg){
+    if(avg === "" || isNaN(avg)) return 0;
+    const score = parseFloat(avg);
+    const scoreMap = [
+        [4.8,4.75],[4.6,4.5],[4.4,4.5],[4.2,4.25],[4.0,4.0],
+        [3.8,3.75],[3.6,3.5],[3.4,3.5],[3.2,3.25],[3.0,3.0],
+        [2.8,2.75],[2.6,2.5],[2.4,2.5],[2.2,2.25]
+    ];
+    for(const [min, val] of scoreMap) if(score >= min) return val;
+    return 0;
+}
+
+function updateAverage(){
+    const ids = ["pc","ga","lr","fl","cr"];
+    const values = ids.map(id=>parseFloat(document.getElementById(id).value)||0).filter(v=>!isNaN(v));
+    const avgField = document.getElementById("avg");
+    const finalSpan = document.getElementById("finalScore");
+
+    if(values.length === 0){
+        avgField.value = "";
+        finalSpan.textContent = "0";
+        finalSpan.classList.add("highlight");
+    } else {
+        const avg = values.reduce((a,b)=>a+b,0)/values.length;
+        avgField.value = avg.toFixed(2);
+        const finalScore = getFinalScore(avg);
+        finalSpan.textContent = finalScore;
+        finalScore === 0 ? finalSpan.classList.add("highlight") : finalSpan.classList.remove("highlight");
+    }
+    updateConsolidated();
+    updateExcelTableCard();
+}
+
+function updateConsolidated(){
+    const ids=["pc","ga","lr","fl","cr"];
+    const avg = document.getElementById("avg").value;
+    const finalScore = getFinalScore(avg);
+    const rawScore = ids.map(id=>document.getElementById(id).value||"0").join(" ")+" = "+(avg||"0");
+
+    const lines = [
+        `Trainee Name: ${document.getElementById("traineeName").value || ""}`,
+        `SLPG Raw Score: ${rawScore}`,
+        `SLPG Final Score: ${finalScore}`,
+        ""
+    ];
+
+    ids.forEach(id=>{
+        const value=document.getElementById(id).value||"";
+        const text=document.getElementById(id+"_text").value||"";
+        lines.push(`${id.toUpperCase()}: ${value}`);
+        if(text) lines.push(text);
+        lines.push("");
+    });
+
+    document.getElementById("outputDisplay").textContent = lines.join("\n");
+}
+
+// ------------------- Input validation -------------------
+document.querySelectorAll(".numInput").forEach(input=>{
+    input.addEventListener("input", ()=>{
+        input.value = input.value.replace(/[^0-9.]/g,"");
+        const parts = input.value.split(".");
+        if(parts.length>2) input.value = parts[0]+"."+parts[1];
+        updateAverage();
+    });
+});
+
+["pc_text","ga_text","lr_text","fl_text","cr_text","traineeName"].forEach(id=>{
+    document.getElementById(id).addEventListener("input", updateConsolidated);
+    document.getElementById(id).addEventListener("input", updateExcelTableCard);
+});
+
+// ------------------- Multi-entry storage -------------------
+let allEntries = [];
+
+function resetAllFields(){
+    document.getElementById("traineeName").value = "";
+    ["pc","ga","lr","fl","cr"].forEach(id=>{
+        document.getElementById(id).value = "";
+        document.getElementById(id+"_text").value = "";
+    });
+    document.getElementById("avg").value = "";
+    document.getElementById("finalScore").textContent = "0";
+    document.getElementById("finalScore").classList.add("highlight");
+    document.getElementById("outputDisplay").textContent = "";
+    updateExcelTableCard();
+}
+
+document.getElementById("addEntryBtn").addEventListener("click", () => {
+    const text = document.getElementById("outputDisplay").textContent.trim();
+    if(text.length < 5){ alert("Nothing to save — please enter a score first."); return; }
+    allEntries.push(text);
+    alert("Entry saved! Total entries: " + allEntries.length);
+    resetAllFields();
+    updateFullExcelTable();
+});
+
+document.getElementById("copyBtn").addEventListener("click", ()=>{
+    navigator.clipboard.writeText(document.getElementById("outputDisplay").textContent);
+    alert("Consolidated output copied!");
+});
+
+document.getElementById("downloadAllBtn").addEventListener("click", () => {
+    if(allEntries.length === 0){ alert("No entries to download."); return; }
+    const blob = new Blob([allEntries.join("\n\n=== End of Entry ===\n\n")], {type:'text/plain'});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "all_entries.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+});
+
+document.getElementById("viewAllBtn").addEventListener("click", ()=>{
+    const win = window.open("", "_blank");
+    let content = allEntries.map((entry,i)=>`=== Entry ${i+1} ===\n${entry}`).join("\n\n");
+    win.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>All Saved Entries</title></head>
+        <body><pre>${content}</pre></body>
+        </html>
+    `);
+});
+
+// ------------------- Excel Table Cards -------------------
+function updateExcelTableCard(){
+    document.getElementById("tbl_traineeName").textContent = document.getElementById("traineeName").value || "";
+    ["pc","ga","lr","fl","cr"].forEach(id=>{
+        document.getElementById("tbl_"+id).textContent = document.getElementById(id).value || "";
+        document.getElementById("tbl_"+id+"_notes").textContent = document.getElementById(id+"_text").value || "";
+    });
+}
+
+document.getElementById("copyExcelRowBtn").addEventListener("click", ()=>{
+    const row = [];
+    ["pc","ga","lr","fl","cr"].forEach(id=>{
+        let score = document.getElementById("tbl_"+id).textContent || "";
+        let notes = document.getElementById("tbl_"+id+"_notes").textContent || "";
+        if(notes.includes('"')) notes = notes.replace(/"/g,'""');
+        if(notes.includes("\n")) notes = `"${notes.replace(/\n/g,"\r\n")}"`;
+        row.push(score, notes);
+    });
+    navigator.clipboard.writeText(row.join("\t")).then(()=>alert("Data copied as Excel row!"));
+});
+
+document.getElementById("copyAllExcelRowsBtn").addEventListener("click", ()=>{
+    let output = "";
+    document.querySelectorAll("#fullExcelBody tr").forEach(row=>{
+        const cells = [...row.querySelectorAll("td")].slice(1,-1);
+        const rowData = cells.map(td=>{
+            let t = td.innerHTML.replace(/<br\s*\/?>/gi,"\n");
+            if(t.includes('"')) t = t.replace(/"/g,'""');
+            return t.includes("\n") ? `"${t}"` : t;
+        });
+        output += rowData.join("\t") + "\n";
+    });
+    navigator.clipboard.writeText(output).then(()=>alert("Excel rows copied WITHOUT trainee name or final score."));
+});
+
+document.getElementById("exportExcelBtn").addEventListener("click", ()=>{
+    const traineeSelect = document.getElementById("traineeName");
+    const allTrainees = Array.from(traineeSelect.options).slice(1).map(opt=>opt.value.trim());
+    const savedData = {};
+
+    allEntries.forEach(entry=>{
+        const lines = entry.split("\n");
+        const name = lines[0].replace("Trainee Name: ","").trim();
+        const finalScore = lines[2].replace("SLPG Final Score: ","").trim();
+
+        // ------------------ FIXED getBlock (only change in entire file) ------------------
+        const getBlock = label => {
+            const idx = lines.findIndex(l => l.startsWith(label + ":"));
+            if (idx === -1) return { score: "", notes: "" };
+
+            let score = lines[idx].replace(label + ":", "").trim();
+            let notes = "";
+            let next = idx + 1;
+
+            const isHeader = line =>
+                ["PC", "GA", "LR", "FL", "CR"].some(key => line.startsWith(key + ":"));
+
+            while (next < lines.length && !isHeader(lines[next]) && lines[next].trim() !== "") {
+                notes += (notes ? "\n" : "") + lines[next];
+                next++;
+            }
+
+            return { score, notes };
+        };
+        // -------------------------------------------------------------------------------
+
+        savedData[name] = {
+            PC:getBlock("PC"), GA:getBlock("GA"), LR:getBlock("LR"),
+            FL:getBlock("FL"), CR:getBlock("CR"), FinalScore:finalScore
+        };
+    });
+
+    const rows = allTrainees.map(name=>{
+        const d = savedData[name] || {PC:{score:"",notes:""}, GA:{score:"",notes:""}, LR:{score:"",notes:""}, FL:{score:"",notes:""}, CR:{score:"",notes:""}, FinalScore:""};
+        return {
+            "Trainee Name": name,
+            "PC": d.PC.score, "PC Notes": d.PC.notes,
+            "GA": d.GA.score, "GA Notes": d.GA.notes,
+            "LR": d.LR.score, "LR Notes": d.LR.notes,
+            "FL": d.FL.score, "FL Notes": d.FL.notes,
+            "CR": d.CR.score, "CR Notes": d.CR.notes,
+            "Final Score": d.FinalScore
+        };
+    });
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "SLPG Scores");
+    XLSX.writeFile(wb, "SLPG_All_Trainees.xlsx");
+});
+
+function updateFullExcelTable(){
+    const tbody = document.getElementById("fullExcelBody");
+    tbody.innerHTML = "";
+    const traineeSelect = document.getElementById("traineeName");
+    const allTrainees = Array.from(traineeSelect.options).slice(1).map(opt=>opt.value.trim());
+    const savedData = {};
+
+    allEntries.forEach(entry=>{
+        const lines = entry.split("\n");
+        const name = lines[0].replace("Trainee Name: ","").trim();
+        const finalScore = lines[2].replace("SLPG Final Score: ","").trim();
+
+        // ------------------ FIXED getBlock (only change in entire file) ------------------
+        const getBlock = label => {
+            const idx = lines.findIndex(l => l.startsWith(label + ":"));
+            if (idx === -1) return { score: "", notes: "" };
+
+            let score = lines[idx].replace(label + ":", "").trim();
+            let notes = "";
+            let next = idx + 1;
+
+            const isHeader = line =>
+                ["PC", "GA", "LR", "FL", "CR"].some(key => line.startsWith(key + ":"));
+
+            while (next < lines.length && !isHeader(lines[next]) && lines[next].trim() !== "") {
+                notes += (notes ? "\n" : "") + lines[next];
+                next++;
+            }
+
+            return { score, notes };
+        };
+        // -------------------------------------------------------------------------------
+
+        savedData[name] = {
+            PC:getBlock("PC"), GA:getBlock("GA"), LR:getBlock("LR"),
+            FL:getBlock("FL"), CR:getBlock("CR"), FinalScore:finalScore
+        };
+    });
+
+    allTrainees.forEach(name=>{
+        const d = savedData[name] || {PC:{score:"",notes:""}, GA:{score:"",notes:""}, LR:{score:"",notes:""}, FL:{score:"",notes:""}, CR:{score:"",notes:""}, FinalScore:""};
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+    	<td class="tn-cell">
+    <div class="tn-cell-inner">
+        <button class="trainee-circle-btn" title="Copy this trainee's row"></button>
+        <span>${name}</span>
+    	</div>
+	</td>
+            <td>${d.PC.score}</td><td>${d.PC.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.GA.score}</td><td>${d.GA.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.LR.score}</td><td>${d.LR.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.FL.score}</td><td>${d.FL.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.CR.score}</td><td>${d.CR.notes.replace(/\n/g,'<br>')}</td>
+            <td>${d.FinalScore}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+
+
+// Copy individual trainee row (Excel-ready, without Final Score)
+document.getElementById("fullExcelBody").addEventListener("click", (e) => {
+    const btn = e.target.closest(".trainee-circle-btn");
+    if (!btn) return;
+
+    const row = btn.closest("tr");
+    if (!row) return;
+
+    // EXCLUDE last column (Final Score)
+    const cells = [...row.querySelectorAll("td")].slice(1, -1).map(td => {
+        let text = td.innerText || "";
+
+        if (text.includes('"')) text = text.replace(/"/g, '""');
+        if (text.includes("\n")) text = `"${text}"`;
+
+        return text;
+    });
+
+    navigator.clipboard.writeText(cells.join("\t"))
+        .then(() => alert("Excel row copied (without Final Score)!"))
+        .catch(() => alert("Copy failed."));
+});
+
+
+
+
+updateExcelTableCard();
+updateFullExcelTable();
+
+let formChanged = false;
+document.querySelectorAll("input, textarea, select").forEach(el=>{
+    el.addEventListener("input", ()=>{ formChanged=true; });
+});
+window.addEventListener("beforeunload", (event)=>{
+    if(formChanged){
+        event.preventDefault();
+        event.returnValue = "";
+    }
+});
+</script>
+
+
+<!-- Checklist Popup (reused for all buttons) -->
+<div id="checklistPopup" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:10px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); z-index:10000;">
+    <div id="checklistItems"></div>
+</div>
+
+
+
+
+
+
+
+<script>
+
+
+
+
+const checklistData = {
+    pc_text: [
+        { header: "6", items: ["• Speaks with a neutral English accent all the time", "• No word and sentence stress errors", "• Has no vowel sound issues: band vs bond vs bun, bin vs bean, boot vs book, diphthongs, schwas", "• Has no consonant sound issues: p vs. f, b vs. v, s vs. z, th sounds, /eks/, /egz/, /sh/, /zh/)"] },
+    { header: "5", items: ["• Speaks with a neutral English accent most of the time", "• Word and sentence stress errors are extremely rare", "• Commits rare consonant or vowel sound mistakes"] },
+    { header: "4", items: ["• Speaks with an almost neutral English accent and may sometimes require some effort to maintain it", "• Word and sentence stress errors may be heard occasionally", "• Commits some consonant or vowel sound mistakes"] },
+    { header: "3", items: ["• Speaks with a slight Filipino / Regional accent", "• Speaks with a slight non-neutral English accent", "• Word and sentence stress errors are obvious", "• Commits obvious consonant or vowel mistakes"] },
+    { header: "2", items: ["• Speaks with a Filipino / Regional accent all the time", "• Speaks with a non-neutral English accent all the time", "• Word and sentence stress errors are frequent", "• Commits frequent consonant or vowel mistakes"] },
+    { header: "1", items: ["• Speaks with a heavy Filipino / Regional accent all the time", "• Speaks with a heavy non-neutral accent all the time", "• Accent issues (consonants, vowels, stress) become a hindrance during conversation"] },
+    { header: "0", items: ["• Non-user"] }
+],
+
+    ga_text: [
+        { header: "6", items: ["Has no errors on the following:\n• Subject-Verb Agreement\n• Verb Tenses and Forms\n• Articles and Numbers\n• Prepositions and Conjunctions\n• Grammatical Structure\n• Others (Pronoun Usage, Parallelism, Modifiers, etc.)\n Note: Successful corrections aren't counted"] },
+    { header: "5", items: ["• Errors are insignificant", "• Errors are rare"] },
+    { header: "4", items: ["• Errors may be heard but are generally negligible", "• Errors may be heard some times"] },
+    { header: "3", items: ["• Errors are noticeable and a bit distracting", "• Errors may be heard most of the time"] },
+    { header: "2", items: ["• Errors are noticeable and distracting", "• Errors may be heard almost always"] },
+    { header: "1", items: ["• Errors cause confusion and become a hindrance during conversation", "• Errors may be heard always"] },
+    { header: "0", items: ["• Non-user"] }
+],
+
+    lr_text: [
+        { header: "6", items: ["• Uses sophisticated expressions (idioms, robust vocabulary)", "• Does not grope for words", "• Uses words that convey thoughts and ideas clearly"] },
+    { header: "5", items: ["• Does not grope for words", "• Uses words that convey thoughts and ideas clearly"] },
+    { header: "4", items: ["• Gropes for certain words", "• Occasionally uses words that may not be suitable for the subject or topic but can still convey thoughts and ideas fairly well"] },
+    { header: "3", items: ["• Gropes for words", "• Uses words that may not be suitable for the subject or topic", "• Uses words that are a direct translation of Filipino to English (filipinoisms, redundancies)", "• Uses colloquial language (unless word used has no English translation)", "• Asks to speak in the vernacular", "• Displays limited vocabulary by using the same word/phrase for different situations or context"] },
+    { header: "2", items: ["• Has difficulty verbalizing thoughts in English and switches frequently between languages", "• Uses words which don't have any conclusive meaning in English", "• Uses incorrect word which changes the meaning of the intended message", "• Frequently uses words in the vernacular, affecting comprehensibility"] },
+    { header: "1", items: ["• Has difficulty verbalizing thoughts and ends up saying very little to work with"] },
+    { header: "0", items: ["• Non-user"] }
+],
+
+    fl_text: [
+        { header: "6", items: ["• Is spontaneous and conversational", "• Speaks with confidence (has a dynamic tone; pacing is suitable for the topic and audience)", "• Speaks without gaps and unnecessary pauses", "• Speaks without having to correct or repeat words and phrases"] },
+    { header: "5", items: ["• Is spontaneous and conversational", "• Speaks with confidence (has a dynamic tone; pacing is suitable for the topic and audience)", "• Speaks with gaps and unnecessary pauses that are barely noticeable"] },
+    { header: "4", items: ["• Is conversational", "• Speaks continuously with certainty", "• Speaks with unnecessary gaps, pauses, fillers, and 'thinking words' that are sporadic but do not affect the overall delivery or meaning of the message"] },
+    { header: "3", items: ["• Can be conversational", "• Sounds uncertain and strained (sluggish pacing)", "• Speaks with occasional pauses that affect the flow of ideas"] },
+    { header: "2", items: ["• Attempts to be spontaneous but frequent pauses affect the flow of ideas", "• Stutters and stammers noticeably", "• Has long pauses in between words and sentences"] },
+    { header: "1", items: ["• Is not spontaneous", "• Stutters, stammers, and pauses excessively"] },
+    { header: "0", items: ["• Non-user"] }
+],
+
+    cr_text: [
+        { header: "6", items: ["• Understands statements and questions with ease (questions do not have to be repeated or clarified)", "• Clearly and effectively communicates the main idea or theme and provides support that justifies or further explains or expounds on the main idea", "• Presents information in a logical, interesting sequence which audience can follow"] },
+    { header: "5", items: ["• Understands statements and questions but may ask for clarification through paraphrasing", "• Always provides answers that correctly address the question", "• Presents information in logical sequence which audience can follow with rare transition/ organizational errors"] },
+    { header: "4", items: ["• Understands statements and questions but may ask for clarification occasionally", "• Generally answers questions correctly with some inappropriate responses", "• Is required to elaborate or is asked a follow up question occasionally", "• Presents information in logical sequence which audience can follow with occasional transition/ organization errors"] },
+    { header: "3", items: ["• Requires most questions to be repeated or rephrased", "• Sometimes responds with inappropriate/incomplete or one-word answers", "• Audience has difficulty following presentation because speaker presents disjointed ideas most of the time"] },
+    { header: "2", items: ["• Requires all questions to be clarified or repeated", "• Often responds with inappropriate/incomplete or one-word answers", "• Audience has difficulty following presentation because speaker almost always presents disjointed ideas"] },
+    { header: "1", items: ["• Needs to be asked the same questions multiple times", "• Always responds with answers that are off-tangent", "• Audience cannot understand presentation because there is no logical sequence of information"] },
+    { header: "0", items: ["• Non-user"] }
+]
+};
+
+
+let currentTextarea = null;
+
+// Create popup and handle checkbox changes
+document.querySelectorAll(".pc-circle-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+        const textarea = btn.parentElement.querySelector("textarea");
+        currentTextarea = textarea;
+
+        // Remove existing popup if any
+        document.querySelectorAll(".checklist-popup").forEach(p => p.remove());
+
+        // Create popup container
+        const popup = document.createElement("div");
+        popup.className = "checklist-popup";
+
+
+
+
+const groups = checklistData[textarea.id] || [];
+groups.forEach(group => {
+    // Add header
+    const header = document.createElement("div");
+    header.textContent = group.header;
+    header.style.fontWeight = "bold";
+    header.style.margin = "8px 0 4px 0";
+    popup.appendChild(header);
+
+    // Add checkboxes
+    group.items.forEach(item => {
+        const label = document.createElement("label");
+        label.style.display = "block";
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = item;
+        checkbox.checked = textarea.value.split("\n").includes(item);
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(" " + item));
+        popup.appendChild(label);
+    });
+});
+
+
+
+
+
+        document.body.appendChild(popup);
+
+        // Position near button
+        const rect = btn.getBoundingClientRect();
+        let top = rect.bottom + window.scrollY + 5;
+        let left = rect.left + window.scrollX;
+
+        // Prevent overflow
+        if(top + popup.offsetHeight > window.scrollY + window.innerHeight){
+            top = rect.top + window.scrollY - popup.offsetHeight - 5;
+        }
+        if(left + popup.offsetWidth > window.scrollX + window.innerWidth){
+            left = window.scrollX + window.innerWidth - popup.offsetWidth - 5;
+        }
+
+        popup.style.top = top + "px";
+        popup.style.left = left + "px";
+
+        // Handle checkbox changes
+        popup.addEventListener("change", (e) => {
+    if (e.target.tagName !== "INPUT") return;
+
+    const checkboxes = popup.querySelectorAll("input[type=checkbox]");
+    const lines = currentTextarea.value.split("\n").filter(l => l); // preserve other notes
+    const otherNotes = lines.filter(line => {
+        return !Array.from(checkboxes).some(cb => cb.value === line);
+    });
+
+    // Get all checked items in order
+    const checkedItems = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+    currentTextarea.value = [...checkedItems, ...otherNotes].join("\n");
+
+    // Update outputs
+    updateConsolidated();
+    updateExcelTableCard();
+    updateFullExcelTable();
+});
+
+    });
+});
+
+// Optional: click outside to close popup
+document.addEventListener("click", (e)=>{
+    if(!e.target.closest(".pc-circle-btn") && !e.target.closest(".checklist-popup")){
+        document.querySelectorAll(".checklist-popup").forEach(p => p.remove());
+    }
+});
+</script>
+
+
+
+
+
+</body>
+</html>
